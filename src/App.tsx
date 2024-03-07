@@ -2,7 +2,7 @@
 import { Provider } from 'react-redux'
 import './App.css'
 import UserTable from './components/Table'
-import store from './components/store'
+import store from './store/store'
 import cl from './components/style.module.scss'
 import { Marquee } from './ui/Marquee'
 

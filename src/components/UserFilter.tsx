@@ -1,8 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import cl from "./style.module.scss";
 import ReactSelect from 'react-select';
 
-const UserFilter = ({ 
+interface IUserFilter {
+  searchByName: boolean
+  searchByLastName: boolean
+  searchByPhoneNumber: boolean
+  searchByYearOfBirth: boolean
+  isDriver: boolean
+  searchText: string
+  filter: string
+  handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  setSearchText: (text: string) => void
+  setFilter: (filter: string) => void
+  setIsDriver: (isDriver: boolean) => void
+}
+
+const UserFilter: React.FC<IUserFilter> = ({ 
   searchByName, 
   searchByLastName, 
   searchByPhoneNumber, 
@@ -16,32 +31,34 @@ const UserFilter = ({
   setIsDriver
 }) => {
 
-    const customStyles: OptionStyles = {
-        option: (provided, state) => ({
-          ...provided,
-          color: state.isSelected ? 'white' : 'white',
-          backgroundColor: state.isSelected ? 'black' : 'white',
-          '&:hover': {
-            backgroundColor: '#242424',
-          },
-          background: 'black', // Set background color of options
-          cursor: 'pointer',
-          border: '1px solid black',
-        }),
-        control: (provided) => ({
-          ...provided,
-          border: '1px solid black',
-          backgroundColor: 'black',
-          borderColor: 'black',
-          cursor: 'pointer',
-        }),
-        singleValue: (provided) => ({
-          ...provided,
-          border: '1px solid black',
-          color: 'white',
-          cursor: 'pointer',
-        }),
-      };
+  const customStyles = {
+    option: (provided: any, state: { isSelected: any; }) => ({
+      ...provided,
+      color: state.isSelected ? 'white' : 'white',
+      backgroundColor: state.isSelected ? 'black' : 'white',
+      '&:hover': {
+        backgroundColor: '#242424',
+      },
+      background: 'black', // Set background color of options
+      cursor: 'pointer',
+      border: '1px solid black',
+    }),
+    control: (provided: any) => ({
+      ...provided,
+      border: '1px solid black',
+      backgroundColor: 'black',
+      borderColor: 'black',
+      cursor: 'pointer',
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      border: '1px solid black',
+      color: 'white',
+      cursor: 'pointer',
+    }),
+
+  };
+
     
 
   return (

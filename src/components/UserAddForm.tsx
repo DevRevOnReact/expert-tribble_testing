@@ -1,12 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import cl from "./style.module.scss";
 import Select from 'react-select';
+import { User } from "../types/types";
 
-const options = [
+const options: Option[] = [
     { value: "Admin", label: "Водители" },
     { value: "User", label: "Пешеходы" }
 ];
 
-const UserAddForm = ({ 
+interface Option {
+  value: string;
+  label: string;
+}
+
+
+interface Props {
+  newUser: User;
+  isDriver: boolean;
+  handleRightsChange: (value: string) => void;
+    setNewUser: React.Dispatch<React.SetStateAction<User>>; // Объявляем тип явно
+
+  handleAddUser: () => void;
+}
+
+
+const UserAddForm: React.FC<Props> = ({ 
   newUser, 
   isDriver, 
   handleRightsChange, 
@@ -16,32 +34,33 @@ const UserAddForm = ({
 
     const formattedValue = options.find(option => option.value === newUser.rights);
 
-    const customStyles: OptionStyles = {
-        option: (provided, state) => ({
-          ...provided,
-          color: state.isSelected ? 'white' : 'white',
-          backgroundColor: state.isSelected ? 'black' : 'white',
-          '&:hover': {
-            backgroundColor: '#242424',
-          },
-          background: 'black', // Set background color of options
-          cursor: 'pointer',
-          border: '1px solid black',
-        }),
-        control: (provided) => ({
-          ...provided,
-          border: '1px solid black',
-          backgroundColor: 'black',
-          borderColor: 'black',
-          cursor: 'pointer',
-        }),
-        singleValue: (provided) => ({
-          ...provided,
-          border: '1px solid black',
-          color: 'white',
-          cursor: 'pointer',
-        }),
-    
+    const customStyles = {
+      option: (provided: any, state: { isSelected: any; }) => ({
+        ...provided,
+        color: state.isSelected ? 'white' : 'white',
+        backgroundColor: state.isSelected ? 'black' : 'white',
+        '&:hover': {
+          backgroundColor: '#242424',
+        },
+        background: 'black', // Set background color of options
+        cursor: 'pointer',
+        border: '1px solid black',
+      }),
+      control: (provided: any) => ({
+        ...provided,
+        border: '1px solid black',
+        backgroundColor: 'black',
+        borderColor: 'black',
+        cursor: 'pointer',
+      }),
+      singleValue: (provided: any) => ({
+        ...provided,
+        border: '1px solid black',
+        color: 'white',
+        cursor: 'pointer',
+      }),
+  
+  
       };
   return (
     <div className={cl.user__add}>
@@ -88,13 +107,17 @@ const UserAddForm = ({
   />
 )}
 <Select
-   className={cl.user__add_select}
-   name="rights"
-   value={formattedValue} // передаем объект со свойствами value и label
-   options={options}
-   onChange={(selectedOption) => handleRightsChange(selectedOption.value)}
-   formatOptionLabel={(option) => <div>{option.label}</div>} 
-   styles={customStyles}
+  className={cl.user__add_select}
+  name="rights"
+  value={formattedValue}
+  options={options}
+  onChange={(selectedOption) => {
+    if (selectedOption && 'value' in selectedOption) {
+      handleRightsChange(selectedOption.value);
+    }
+  }}
+  formatOptionLabel={(option) => <div>{option.label}</div>}
+  styles={customStyles}
 />
       <button className={cl.user__add_button} onClick={handleAddUser}>Добавить пользователя</button>
     </div>

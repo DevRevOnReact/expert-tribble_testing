@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from './store';
-import { User } from './types';
-import { addUser, updateUser, deleteUser } from './reducers';
+import { RootState } from '../store/store';
+import { User } from '../types/types';
+import { addUser, updateUser, deleteUser } from '../store/reducers';
 import cl from "./style.module.scss";
 import { useState, useCallback, useMemo } from 'react';
 import UserAddForm from './UserAddForm';
@@ -30,32 +30,6 @@ const UserList: React.FC = () => {
     carNumber: '',
   });
 
-  const customStyles: OptionStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      color: state.isSelected ? 'white' : 'white',
-      backgroundColor: state.isSelected ? 'black' : 'white',
-      '&:hover': {
-        backgroundColor: '#242424',
-      },
-      background: 'black', // Set background color of options
-      cursor: 'pointer',
-      border: '1px solid black',
-    }),
-    control: (provided) => ({
-      ...provided,
-      border: '1px solid black',
-      backgroundColor: 'black',
-      borderColor: 'black',
-      cursor: 'pointer',
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      border: '1px solid black',
-      color: 'white',
-      cursor: 'pointer',
-    }),
-  };
 
   const handleAddUser = useCallback(() => {
     if (
@@ -67,17 +41,15 @@ const UserList: React.FC = () => {
       return;
     }
   
-    // Check for duplicates before adding a new user
     const isDuplicate = users.some(
       (user) =>
         user.firstName.toLowerCase() === newUser.firstName.toLowerCase() &&
         user.lastName.toLowerCase() === newUser.lastName.toLowerCase() &&
         user.phoneNumber === newUser.phoneNumber &&
-        (!isDriver || user.carNumber === newUser.carNumber) // Check for car number only if user is a driver
+        (!isDriver || user.carNumber === newUser.carNumber)
     );
   
     if (isDuplicate) {
-      // Handle duplicate user case (e.g., show an error message)
       console.error('Duplicate user detected!');
       return;
     }
@@ -183,13 +155,10 @@ const UserList: React.FC = () => {
       const isFilterMatch = filter === '' || user.rights.toLowerCase() === filter.toLowerCase();
 
       if (!(searchByName || searchByLastName || searchByPhoneNumber || searchByYearOfBirth)) {
-        // If none of the checkboxes is selected, perform a search across all parameters
         return isGeneralMatch && isFilterMatch;
       }
 
       const isSelectedSearchMatch = parameterSearch(user);
-
-      // If at least one checkbox is selected, search only within the selected parameters
       return isSelectedSearchMatch && isFilterMatch;
     });
   }, [

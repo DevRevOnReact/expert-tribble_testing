@@ -1,10 +1,17 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import cl from "./style.module.scss";
-import { User } from './types';
+import { User } from '../types/types';
 import Select from 'react-select';
 
-const customStyles: OptionStyles = {
-    option: (provided, state) => ({
+interface IProps {
+  filteredUsers: User[];
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>, user: User) => void;
+  handleDeleteUser: (userId: number) => void;
+}
+
+
+const customStyles = {
+    option: (provided: any, state: { isSelected: any; }) => ({
       ...provided,
       color: state.isSelected ? 'white' : 'white',
       backgroundColor: state.isSelected ? 'black' : 'white',
@@ -15,14 +22,14 @@ const customStyles: OptionStyles = {
       cursor: 'pointer',
       border: '1px solid black',
     }),
-    control: (provided) => ({
+    control: (provided: any) => ({
       ...provided,
       border: '1px solid black',
       backgroundColor: 'black',
       borderColor: 'black',
       cursor: 'pointer',
     }),
-    singleValue: (provided) => ({
+    singleValue: (provided: any) => ({
       ...provided,
       border: '1px solid black',
       color: 'white',
@@ -31,7 +38,7 @@ const customStyles: OptionStyles = {
 
   };
 
-const UserItemList = ({ 
+const UserItemList: React.FC<IProps> = ({ 
   filteredUsers, 
   handleInputChange, 
   handleDeleteUser 
@@ -86,17 +93,29 @@ const UserItemList = ({
         placeholder="Номер автомобиля"
       />
     )}
-    <Select
-        className={cl.user__item_select}
-        name="rights"
-        value={{ label: user.rights === "Admin" ? "Водитель" : "Пешеход", value: user.rights }}
-        options={[
-            { value: "Admin", label: "Водитель" },
-            { value: "User", label: "Пешеход" }
-        ]}
-        styles={customStyles}
-        onChange={(selectedOption) => handleInputChange({ target: { name: "rights", value: selectedOption.value } }, user)}
-    />
+<Select
+  className={cl.user__item_select}
+  name="rights"
+  value={{ label: user.rights === "Admin" ? "Водитель" : "Пешеход", value: user.rights }}
+  options={[
+    { value: "Admin", label: "Водитель" },
+    { value: "User", label: "Пешеход" }
+  ]}
+  styles={customStyles}
+  onChange={(selectedOption: { value: string; label: string } | null) => {
+    if (selectedOption) {
+      const event = {
+        target: {
+          name: "rights",
+          value: selectedOption.value
+        }
+      } as React.ChangeEvent<HTMLInputElement>;
+
+      handleInputChange(event, user);
+    }
+  }}
+/>
+
           <button className={cl.user__item_button} onClick={() => handleDeleteUser(user.id)}>Удалить</button>
         </li>
       ))
